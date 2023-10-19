@@ -1,66 +1,56 @@
-## Foundry
+# WTF Solidity Internals
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+《WTF Solidity内部标准》教程将介绍Solidity智能合约中的存储布局，内存布局，以及ABI编码规则，帮助大家理解Solidity的内部规则。
 
-Foundry consists of:
+先修课程：
+1. [WTF Solidity](https://github.com/AmazingAng/WTF-Solidity)
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+## 教程
 
-## Documentation
+**第01讲：基础存储布局**：[Code](https://github.com/WTFAcademy/WTF-Huff/blob/main/src/01_ValueStorage.sol) | [文章](https://github.com/WTFAcademy/WTF-Huff/blob/main/tutorials/01_ValueStorage/readme.md) 
 
-https://book.getfoundry.sh/
+## 运行模版项目
 
-## Usage
+### 配置环境
 
-### Build
+要使用此模板，你需要安装以下内容。请按照链接和指示操作。
 
-```shell
-$ forge build
+- [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)  
+    - 如果你可以运行`git --version`，则说明你已正确安装。
+- [Foundry / Foundryup](https://github.com/gakonst/foundry)
+    - 这将会安装`forge`，`cast`和`anvil`
+    - 通过运行`forge --version`并获取类似`forge 0.2.0 (92f8951 2022-08-06T00:09:32.96582Z)`的输出，你可以检测是否已正确安装。
+    - 要获取每个工具的最新版本，只需运行`foundryup`。
+
+### 快速开始
+
+1. 克隆[本仓库](https://github.com/WTFAcademy/WTF-Solidity-Internals)。
+
+运行：
+
+```
+git clone https://github.com/WTFAcademy/WTF-Solidity-Internals
+cd WTF-Huff
 ```
 
-### Test
+2. 安装依赖
+
+克隆并进入你的仓库后，你需要安装必要的依赖项。为此，只需运行：
 
 ```shell
-$ forge test
+forge install
 ```
 
-### Format
+3. 打印合约存储布局
+
+要打印合约存储布局，你可以运行：
 
 ```shell
-$ forge fmt
+forge inspect ValueStorage3 storage-layout --pretty
 ```
 
-### Gas Snapshots
+有关如何使用Foundry的更多信息，请查看[Foundry Github Repository](https://github.com/foundry-rs/foundry/tree/master/forge)和[foundry-huff library repository](https://github.com/huff-language/foundry-huff)。
 
-```shell
-$ forge snapshot
-```
+## 参考
 
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```
+- [Solidity-doc](https://docs.soliditylang.org/en/latest/internals/layout_in_storage.html)
