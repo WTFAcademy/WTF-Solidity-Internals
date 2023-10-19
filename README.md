@@ -7,7 +7,7 @@
 
 ## 教程
 
-**第01讲：基础存储布局**：[Code](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/main/src/01_ValueStorage.sol) | [文章](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/main/tutorials/01_ValueStorage/readme.md) 
+**第01讲：基础存储布局**：[Code](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/src/01_ValueStorage.sol) | [文章](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/tutorials/01_ValueStorage/readme.md) 
 
 ## 运行
 
