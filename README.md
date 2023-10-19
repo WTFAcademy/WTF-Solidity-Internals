@@ -9,7 +9,7 @@
 
 **第01讲：基础存储布局**：[Code](https://github.com/WTFAcademy/WTF-Huff/blob/main/src/01_ValueStorage.sol) | [文章](https://github.com/WTFAcademy/WTF-Huff/blob/main/tutorials/01_ValueStorage/readme.md) 
 
-## 运行模版项目
+## 运行
 
 ### 配置环境
 
