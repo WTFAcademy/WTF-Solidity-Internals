@@ -9,6 +9,8 @@
 
 **第01讲：基础存储布局**：[Code](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/src/01_ValueStorage.sol) | [文章](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/tutorials/01_ValueStorage/readme.md) 
 
+**第02讲：映射和动态数组的存储布局**：[Code](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/src/02_MappingStorage.sol) | [文章](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/tutorials/02_MappingStorage/readme.md) 
+
 ## 运行
 
 ### 配置环境
