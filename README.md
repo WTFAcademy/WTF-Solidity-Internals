@@ -13,6 +13,8 @@
 
 **第03讲：字节数组和字符串的存储布局**：[Code](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/src/03_BytesStorage.sol) | [文章](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/tutorials/03_BytesStorage/readme.md) 
 
+**第04讲：内存布局**：[Code](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/src/04_MemoryLayout.sol) | [文章](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/tutorials/04_MemoryLayout/readme.md) 
+
 ## 运行
 
 ### 配置环境
