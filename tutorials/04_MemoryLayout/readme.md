@@ -29,15 +29,15 @@ EVM使用内存来支持交易执行期间的数据存储和读取。EVM的内�
 
 ## 内存布局
 
-相比于存储，在内存上写入和读取数据要便宜的多，因此我们不需要像使用存储那样节省，可以豪横一点。这主要体现在我们不会将多个变量保存在同一个内存槽中。
+相比于存储，在内存上写入和读取数据要便宜的多，因此我们不需要像使用存储那样节省，可以豪横一点。这主要体现在我们不会将多个变量压缩保存在同一个内存槽中。
 
 ### 预留插槽
 
 Solidity保留了前4个内存插槽，每个插槽32字节，用于特殊目的：
 
-1. `0x00` - `0x3f` （64字节）：用于哈希方法的临时空间。
+1. `0x00` - `0x3f` （64字节）：用于哈希方法的临时空间，比如读取mapping里的数据时，要用到key的hash值，key的hash结果就暂存在这里。
 2. `0x40` - `0x5f` （32字节）：当前分配的内存大小，又称空闲内存指针（Free Memory Pointer），指向当前空闲的内存位置。Solidity 总会把新对象保存在空闲内存指针的位置，并更新它的值到下一个空闲位置。
-3. `0x60` - `0x7f` （32字节）： `0`值插槽（目前没发现有什么用）。
+3. `0x60` - `0x7f` （32字节）： 32字节的`0`值插槽，用于需要零值的地方，比如动态长度数据的初始长度值。
 
 ### 值变量
 
@@ -53,6 +53,33 @@ function testUint() public pure returns (uint){
 可以看到，上面`testUint()`函数中的`a`变量的值被存在内存槽`0x80`中：
 
 ![](./img/4-2.png)
+
+### 字符串/字节数组
+
+对于内存布局，字符串/字节数组不论长短规则都是一样的。字符串/字节数组长度保存在单独的一个内存槽中，接着是内容，一个内存槽不够的话会顺序保存到后面的内存槽中。
+
+```solidity
+function testShortString() public pure returns (string memory){
+    string memory x = "WTF";
+    return x;
+}
+```
+
+上面的字符串变量`x`的长度为`3`，保存在内存槽`0x80`；内容为`WTF`，保存在内存槽`0xa0`
+
+![](./img/4-5.png)
+
+```solidity
+function testLongBytes() public pure returns (bytes memory){
+    bytes memory x = hex"365f5f375f5f365f73bebebebebebebebebebebebebebebebebebebebe5af43d5f5f3e5f3d91602a57fd5bf3";
+    return x;
+}
+```
+
+上面的字节数组变量`x`的长度为`44`（`0x2c`），保存在内存槽`0x80`；内容保存在内存槽`0xa0`-`0xc0`中。
+
+![](./img/4-6.png)
+
 
 ### 静态数组
 
@@ -86,32 +113,26 @@ function testDynamicArray() public pure returns (uint[] memory){
 
 ![](./img/4-4.png)
 
-### 字符串/字节数组
+### 多维数组
 
-对于内存布局，字符串/字节数组不论长短规则都是一样的。字符串/字节数组长度保存在单独的一个内存槽中，接着是内容，一个内存槽不够的话会顺序保存到后面的内存槽中。
+当数组里存的是可变长度的数据或其他数组时，对应元素的内存槽存的是变长数据在内存中的指针也就是起始地址。
 
 ```solidity
-function testShortString() public pure returns (string memory){
-    string memory x = "WTF";
+function testMultiDimensionalArray(string memory info, uint16 length) public pure returns (string[] memory){
+    string[] memory x = new string[](length);
+    x[0] = info;
+    x[1] = "HELLO";
+    x[length - 1] = "WTF";
     return x;
 }
 ```
 
-上面的字符串变量`x`的长度为`3`，保存在内存槽`0x80`；内容为`WTF`，保存在内存槽`0xa0`
+可以看到, `testMultiDimensionalArray("123456789", 5)`函数中，参数`info`的长度和数据存在内存槽`0x80` - `0xa0`中，参数`length`因为被编译器优化没有被存在接下来的内存槽中，内存槽`0xc0`存的是`x`变量的长度，内存槽`0xe0` - `0x160`存的是对应元素的string数据在内存中的起始地址, `x[0]`中存的是`0x80`，`x[1]`中存的是`0x180`也就是`string("HELLO")`在内存中的起始位置，`x[2]`、`x[3]`都存的是`0x60`，内存槽`0x60`中是恒定的32字节0，在这里就表示长度为0的string，`x[4]`中存的是`0x1c0`也就是`string("WTF")`在内存中的起始位置，`0x200`后的数据都是`abi.encode`过的返回数据。
 
-![](./img/4-5.png)
-
-```solidity
-function testLongBytes() public pure returns (bytes memory){
-    bytes memory x = hex"365f5f375f5f365f73bebebebebebebebebebebebebebebebebebebebe5af43d5f5f3e5f3d91602a57fd5bf3";
-    return x;
-}
-```
-
-上面的字节数组变量`x`的长度为`44`（`0x2c`），保存在内存槽`0x80`；内容保存在内存槽`0xa0`-`0xc0`中。
-
-![](./img/4-6.png)
+![](./img/4-7.png)
+![](./img/4-8.png)
+![](./img/4-9.png)
 
 ## 总结
 
-这一讲，我们介绍了Solidity合约的内存布局。内存布局与存储布局类似，但是由于内存操作消耗的gas很低，我们不需要像存储布局那样将多个变量保存在同一个内存槽中。
+这一讲，我们介绍了Solidity合约的内存布局。内存布局与存储布局大致类似，但是由于内存操作消耗的gas很低，我们不需要像存储布局那样将多个变量保存在同一个内存槽中。
