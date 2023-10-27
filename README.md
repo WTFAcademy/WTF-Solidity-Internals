@@ -15,6 +15,8 @@
 
 **第04讲：内存布局**：[Code](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/src/04_MemoryLayout.sol) | [文章](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/tutorials/04_MemoryLayout/readme.md) 
 
+**第05讲：ABI编码基础**：[Code](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/src/05_AbiEncode.sol) | [文章](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/tutorials/05_AbiEncode/readme.md) 
+
 ## 运行
 
 ### 配置环境
