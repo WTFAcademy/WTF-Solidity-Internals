@@ -17,6 +17,8 @@
 
 **第05讲：ABI编码基础**：[Code](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/src/05_AbiEncode.sol) | [文章](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/tutorials/05_AbiEncode/readme.md) 
 
+**第06讲：动态类型的ABI编码**：[Code](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/src/06_AbiDynamic.sol) | [文章](https://github.com/WTFAcademy/WTF-Solidity-Internals/blob/master/tutorials/06_AbiDynamic/readme.md) 
+
 ## 运行
 
 ### 配置环境
