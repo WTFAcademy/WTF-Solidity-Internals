@@ -17,7 +17,7 @@ tags:
 
 -----
 
-这一讲，我们将介绍函数调用`calldata`和返回值`returndata`的ABI编码规则。
+这一讲，我们将介绍Solidity的函数调用`calldata`和返回值`returndata`的ABI编码规则。
 
 ## calldata
 
