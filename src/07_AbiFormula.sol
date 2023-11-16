@@ -2,12 +2,12 @@
 pragma solidity ^0.8.4;
 
 contract AbiFormula {
-    function testAbiUintTuple() public pure returns (bytes memory){
+    function testAbiUintTuple() public pure returns (bytes memory) {
         uint x = 1;
         return abi.encode((x));
     }
 
-    function testAbiArray() public pure returns (bytes memory){
+    function testAbiArray() public pure returns (bytes memory) {
         uint[] memory x = new uint[](3);
         x[0] = 1;
         x[1] = 2;
@@ -15,9 +15,13 @@ contract AbiFormula {
         return abi.encode(x);
     }
 
-    struct DynamicStruct { uint x; uint[] y; string z; }
+    struct DynamicStruct {
+        uint x;
+        uint[] y;
+        string z;
+    }
 
-    function testAbiDynamicStruct() public pure returns (bytes memory){
+    function testAbiDynamicArray() public pure returns (bytes memory) {
         uint x = 99;
         uint[] memory y = new uint[](3);
         y[0] = 1;
@@ -25,6 +29,10 @@ contract AbiFormula {
         y[2] = 3;
         string memory z = "WTF";
 
-        return abi.encode(DynamicStruct(x, y, z));
+        bytes memory encodedX = abi.encode(x);
+        bytes memory encodedY = abi.encode(y);
+        bytes memory encodedZ = abi.encode(z);
+
+        return abi.encodePacked(encodedX, encodedY, encodedZ);
     }
 }

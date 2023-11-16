@@ -5,19 +5,19 @@ tags:
   - abi
 ---
 
-# WTF Solidity内部标准: 07. ABI编码公式
+# WTF Solidity 内部标准: 07. ABI 编码公式
 
-《WTF Solidity内部标准》教程将介绍Solidity智能合约中的存储布局，内存布局，以及ABI编码规则，帮助大家理解Solidity的内部规则。
+《WTF Solidity 内部标准》教程将介绍 Solidity 智能合约中的存储布局，内存布局，以及 ABI 编码规则，帮助大家理解 Solidity 的内部规则。
 
 推特：[@0xAA_Science](https://twitter.com/0xAA_Science)
 
 社区：[Discord](https://discord.gg/5akcruXrsk)｜[微信群](https://docs.google.com/forms/d/e/1FAIpQLSe4KGT8Sh6sJ7hedQRuIYirOoZK_85miz3dw7vA1-YjodgJ-A/viewform?usp=sf_link)｜[官网 wtf.academy](https://wtf.academy)
 
-所有代码和教程开源在github: [github.com/AmazingAng/WTF-Solidity-Internals](https://github.com/AmazingAng/WTF-Solidity-Internals)
+所有代码和教程开源在 github: [github.com/AmazingAng/WTF-Solidity-Internals](https://github.com/AmazingAng/WTF-Solidity-Internals)
 
------
+---
 
-这一讲，我们介绍基于[Solidity文档](https://docs.soliditylang.org/en/v0.8.21/abi-spec.html)总结的ABI编码公式。
+这一讲，我们介绍基于[Solidity 文档](https://docs.soliditylang.org/en/v0.8.21/abi-spec.html)总结的 ABI 编码公式。
 
 ## 符号说明
 
@@ -26,15 +26,14 @@ tags:
 1. `T`: 任意变量类型。
 2. `(T1, T2,...,Tn)`: 由`T1`...`Tn`等类型的变量组成的元组。
 3. `len(a)`: `a`的字节长度，用于计算数据偏移量。
-4. `e(X)`: 变量`X`的ABI编码。
+4. `e(X)`: 变量`X`的 ABI 编码。
 5. `head(X)`: `X`变量的头部编码。
 6. `tail(X)`: `X`变量的尾部编码。
 7. `pad_right(X)`: 在`X`的值的右侧补若干个`0`，使其长度成为`32`字节。
 
+## ABI 编码公式
 
-## ABI编码公式
-
-我们将Solidity合约的ABI编码公式分为两部分，第一部分为递归编码公式，第二部分为类型编码公式。逻辑就是将复杂类型使用递归公式转换成简单类型进行编码。
+我们将 Solidity 合约的 ABI 编码公式分为两部分，第一部分为递归编码公式，第二部分为类型编码公式。逻辑就是将复杂类型使用递归公式转换成简单类型进行编码。
 
 ### 递归编码公式
 
@@ -53,11 +52,11 @@ e(X) = head(X(1)) ... head(X(k)) tail(X(1)) ... tail(X(k))
 那么`head(Xi)`和`tail(Xi)`如何定义？
 
 - 如果`X(i)`的类型`Ti`为静态类型，则直接在头部进行编码，没有尾部编码：
-    - `head(X(i)) = e(X(i))`
-    - `tail(X(i)) = ""`（为空）
-- 如果`X(i)`的类型`Ti`为动态类型，那么会在尾部进行编码，头部编码为尾部编码`tail(X(k))`的偏移量：
-    - `head(X(i)) = e(len(head(X(1)) ... head(X(k)) tail(X(1)) ... tail(X(k-1))))`（这是从`head(X1)`到`tail(X(k-1))`的字节长度，也是`tail(X(k))`的偏移量）
-    - `tail(X(i)) = e(X(i))`
+  - `head(X(i)) = e(X(i))`
+  - `tail(X(i)) = ""`（为空）
+- 如果`X(i)`的类型`Ti`为动态类型，那么会在尾部进行编码，头部编码为尾部编码`tail(X(i))`的偏移量：
+  - `head(X(i)) = e(len(head(X(1)) ... head(X(k)) tail(X(1)) ... tail(X(i-1))))`（这是从`head(X1)`到`tail(X(i-1))`的字节长度，也是`tail(X(i))`的偏移量）
+  - `tail(X(i)) = e(X(i))`
 
 2. 定长数组
 
@@ -79,12 +78,11 @@ e(X) = e(k) e((X[0], ..., X[k-1]))
 
 其中长度`k`当作`uint256`类型编码。也就是说，它的编码有两部分，第一部分为长度`k`的编码，第二部分为等效的定长数组的编码。
 
-
 ## 类型编码公式
 
-类型编码公式以穷举的方式给出简单类型的ABI编码规则。
+类型编码公式以穷举的方式给出简单类型的 ABI 编码规则。
 
-1. `uint<M>`：`M`位的无符号整数，`M`的取值为`0`到`256`之间的可以整除8的整数，比如`uint8`，`uint32`，`uint256`（`uint`是`uint256`的同义词）。编码时，会在它们左侧补充若干`0`以使其长度成为`32`字节。
+1. `uint<M>`：`M`位的无符号整数，`M`的取值为`0`到`256`之间的可以整除 8 的整数，比如`uint8`，`uint32`，`uint256`（`uint`是`uint256`的同义词）。编码时，会在它们左侧补充若干`0`以使其长度成为`32`字节。
 
 2. `address`：地址类型，与`uint160`的编码方式相同。`address payable`和`contract`类型的变量也使用相同的编码方式。
 
@@ -94,13 +92,13 @@ e(X) = e(k) e((X[0], ..., X[k-1]))
 
 5. `bytes`: 若`X`是长度为`k`（`k`的类型为`uint256`）的不定长字节数组，则`enc(X) = enc(k) pad_right(X)`，也就是先编码长度`k`，再编码内容。编码内容时会在右侧补若干`0`使其长度成为`32`字节的倍数。
 
-6. `string`: 会先用`UTF-8`编码为`bytes`，然后使用`bytes`的规则进行ABI编码。
+6. `string`: 会先用`UTF-8`编码为`bytes`，然后使用`bytes`的规则进行 ABI 编码。
 
-以上是常用类型的ABI编码规则，不常用类型（如`int`，`fixed`，`ufixed`）的规则见[文档](https://docs.soliditylang.org/en/v0.8.21/abi-spec.html)。
+以上是常用类型的 ABI 编码规则，不常用类型（如`int`，`fixed`，`ufixed`）的规则见[文档](https://docs.soliditylang.org/en/v0.8.21/abi-spec.html)。
 
 ## 示例
 
-### 示例1: (uint x)
+### 示例 1: (uint x)
 
 ```solidity
 function testAbiUintTuple() public pure returns (bytes memory){
@@ -109,15 +107,15 @@ function testAbiUintTuple() public pure returns (bytes memory){
 }
 ```
 
-`(x)`是元组，根据ABI编码公式，`e((x)) = head(x) tail(x)`。
+`(x)`是元组，根据 ABI 编码公式，`e((x)) = head(x) tail(x)`。
 
-`x`为`uint`类型，所以`head(x) = e(x)`，`tail(x) = ""`，所以`(x)`的ABI编码为
+`x`为`uint`类型，所以`head(x) = e(x)`，`tail(x) = ""`，所以`(x)`的 ABI 编码为
 
 ```
 0x0000000000000000000000000000000000000000000000000000000000000001
 ```
 
-### 示例2: (uint[] x)
+### 示例 2: (uint[] x)
 
 ```solidity
 function testAbiArray() public pure returns (bytes memory){
@@ -129,13 +127,13 @@ function testAbiArray() public pure returns (bytes memory){
 }
 ```
 
-`(x)`是元组，根据ABI编码公式，`e((x)) = head(x) tail(x)`。`x`为`uint[]`类型（不定长数组），是动态类型，因此：
+`(x)`是元组，根据 ABI 编码公式，`e((x)) = head(x) tail(x)`。`x`为`uint[]`类型（不定长数组），是动态类型，因此：
 
 - `head(x) = len(head(x))`也就是`0x20`
 
 - `tail(x) = e(x) = e(k) e(x[0]) e(x[1]) e(x[2])`，其中`k = 3`是数组的长度。
 
-所以`(x)`的ABI编码为:
+所以`(x)`的 ABI 编码为:
 
 ```
 0x
@@ -146,7 +144,7 @@ function testAbiArray() public pure returns (bytes memory){
 0000000000000000000000000000000000000000000000000000000000000003
 ```
 
-### 示例3: ((uint x, uint[] y, string z))
+### 示例 3: ((uint x, uint[] y, string z))
 
 ```solidity
 function testAbiDynamicArray() public pure returns (bytes memory){
@@ -157,12 +155,15 @@ function testAbiDynamicArray() public pure returns (bytes memory){
     y[2] = 3;
     string memory z = "WTF";
 
-    return abi.encode(((x, y, z)));
+    bytes memory encodedX = abi.encode(x);
+    bytes memory encodedY = abi.encode(y);
+    bytes memory encodedZ = abi.encode(z);
+
+    return abi.encodePacked(encodedX, encodedY, encodedZ);
 }
 ```
 
-由于`y`和`z`都是动态类型，因此`(x, y, z)`元组为动态类型，`((x, y, z))`元组也是动态类型，根据ABI编码公式，`e(((x, y, z))) = head(((x, y, z))) tail(((x, y, z)))`。
-
+由于`y`和`z`都是动态类型，因此`(x, y, z)`元组为动态类型，`((x, y, z))`元组也是动态类型，根据 ABI 编码公式，`e(((x, y, z))) = head(((x, y, z))) tail(((x, y, z)))`。
 
 其中`head(((x, y, z))) = len(head(((x, y, z))))` 为`0x20`，因为`((x, y, z))`只有一个元素`(x, y, z)`，虽然这个元素也是一个元组。`tail(((x, y, z))) = e((x, y, z))`（这里我们脱了一层括号，开始编码元组的元素了）。
 
@@ -226,7 +227,7 @@ tail(z)
 
 - `tail(z) = e(z) = e(3) pad_right(575446)`
 
-呼，最后，我们就得到了`((uint x, uint[] y, string z))`的ABI编码：
+呼，最后，我们就得到了`((uint x, uint[] y, string z))`的 ABI 编码：
 
 ```
 0x
@@ -242,8 +243,8 @@ tail(z)
 5754460000000000000000000000000000000000000000000000000000000000
 ```
 
-如果你能自己推导出`((uint x, uint[] y, string z))`的编码，说明你已经掌握了ABI编码的规律！
+如果你能自己推导出`((uint x, uint[] y, string z))`的编码，说明你已经掌握了 ABI 编码的规律！
 
 ## 总结
 
-这一讲，我们介绍了Solidity合约的ABI编码公式，有了它，再复杂的编码也不怕。它的核心思想是使用递归的方法把复杂类型的编码转换成简单类型的编码。
+这一讲，我们介绍了 Solidity 合约的 ABI 编码公式，有了它，再复杂的编码也不怕。它的核心思想是使用递归的方法把复杂类型的编码转换成简单类型的编码。
