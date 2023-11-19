@@ -1,11 +1,11 @@
 ---
-title: 08. calldata和returndata的ABI编码
+title: 08. calldata/returndata的ABI编码
 tags:
   - solidity
   - abi
 ---
 
-# WTF Solidity内部标准: 08. 不同功能的ABI编码
+# WTF Solidity内部标准: 08. calldata/returndata的ABI编码
 
 《WTF Solidity内部标准》教程将介绍Solidity智能合约中的存储布局，内存布局，以及ABI编码规则，帮助大家理解Solidity的内部规则。
 
