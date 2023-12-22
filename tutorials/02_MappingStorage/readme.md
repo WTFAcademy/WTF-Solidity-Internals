@@ -50,6 +50,13 @@ contract MappingStorage {
     function getHash(bytes memory bb) public pure returns(bytes32){
         return keccak256(bb);
     }
+
+    // hashmap的slot计算公式：slot = keccak256(h(k) . p)，其中 . 意味着把前后2个值拼接到一起，类似于abi.encode(h(k), p)
+    // get slot of a[0] 时 key = 0, p = 0, result = 0xad3228b676f7d3cd4284a5443f17f1962b36e491b30a40b2405849e597ba5fb5
+    // get slot of a[1] 时 key = 1, p = 0, result = 0xada5013122d395ba3c54772283fb069b10426056ef8ca54750cb9bb552a59e7d
+    function getSlot(uint key, uint p) public pure returns(bytes32){
+        return keccak256(abi.encode(key, p));
+    }
 }
 ```
 
@@ -106,6 +113,13 @@ contract ArrayStorage {
 
     function getHash(bytes memory bb) public pure returns(bytes32){
         return keccak256(bb);
+    }
+
+    // 数组的slot计算公式，slot = keccak256(p)，其中p为数组状态变量在基本布局中的位置，此时b的位置p为1（状态变量a位置为0）
+    // get slot of b[0] 时，variableStatePosition = 1, result = 0xb10e2d527612073b26eecdfd717e6a320cf44b4afac2b0732d9fcbe2b7fa0cf6
+    // 对于1维数组只需要计算出第一个元素的slot即可，其他的元素依次排列，直到当前slot填满，再开启下一个slot
+    function getSlot(uint128 variableStatePosition) public pure returns(bytes32){
+        return keccak256(abi.encode(variableStatePosition));
     }
 }
 ```
