@@ -47,6 +47,10 @@ contract MappingStorage {
         a[1] = 2;
     }
 
+    function getEncode(uint k, uint p) public pure returns(bytes memory){
+        return abi.encode(k, p);
+    }
+
     function getHash(bytes memory bb) public pure returns(bytes32){
         return keccak256(bb);
     }
@@ -80,19 +84,7 @@ a[0]: 0xad3228b676f7d3cd4284a5443f17f1962b36e491b30a40b2405849e597ba5fb5
 a[1]: 0xada5013122d395ba3c54772283fb069b10426056ef8ca54750cb9bb552a59e7d
 ```
 
-它们分别由：
-
-```
-keccak256(0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000)
-```
-
-和
-
-```
-keccak256(0x00000000000000000000000000000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000)
-```
-
-计算而得，你可以把它们输入`getHash()`函数，并检查输出的值。
+它们分别由：`keccak256(abi.encode(0, 0))`和`keccak256(abi.encode(0, 1))`计算而得，你可以用`getEncode()`和`getHash()`函数，检查输出的值。
 
 ## 动态数组
 
@@ -109,6 +101,10 @@ contract ArrayStorage {
         b.push(10);
         b.push(11);
         b.push(12);
+    }
+
+    function getEncode(uint k, uint p) public pure returns(bytes memory){
+        return abi.encode(k, p);
     }
 
     function getHash(bytes memory bb) public pure returns(bytes32){
