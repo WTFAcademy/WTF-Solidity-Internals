@@ -1,5 +1,7 @@
 # WTF Solidity Internals
 
+可运行的 Foundry 示例使用 Solidity 0.8.39、Foundry v1.10.0 和 forge-std v1.17.0。克隆后运行 `git submodule update --init --recursive`，再运行 `forge test`。
+
 《WTF Solidity内部标准》教程将介绍Solidity智能合约中的存储布局，内存布局，以及ABI编码规则，帮助大家理解Solidity的内部规则。
 
 先修课程：
