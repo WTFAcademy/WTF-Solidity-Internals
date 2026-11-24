@@ -5,12 +5,12 @@ contract AbiError {
     error InsufficientBalance(address from, uint256 required);
 
     // revert-error
-    function testError(address addr, uint amount) public pure {
+    function demoError(address addr, uint amount) public pure {
         revert InsufficientBalance(addr, amount);
     }
 
     // require
-    function testRequire(address from) public pure {
+    function demoRequire(address from) public pure {
         require(from == address(0), "Transfer Not Zero");
     }
 }

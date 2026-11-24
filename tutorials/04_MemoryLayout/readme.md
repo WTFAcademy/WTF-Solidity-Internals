@@ -120,7 +120,8 @@ function testDynamicArray() public pure returns (uint[] memory){
 当数组里存的是可变长度的数据或其他数组时，对应元素的内存槽存的是变长数据在内存中的指针也就是起始地址。
 
 ```solidity
-function testMultiDimensionalArray(string memory info, uint16 length) public pure returns (string[] memory){
+function demoMultiDimensionalArray(string memory info, uint16 length) public pure returns (string[] memory){
+    require(length >= 3, "length must be at least 3");
     string[] memory x = new string[](length);
     x[0] = info;
     x[1] = "HELLO";
@@ -129,7 +130,7 @@ function testMultiDimensionalArray(string memory info, uint16 length) public pur
 }
 ```
 
-可以看到, `testMultiDimensionalArray("123456789", 5)`函数中，参数`info`的长度和数据存在内存槽`0x80` - `0xa0`中，参数`length`因为被编译器优化没有被存在接下来的内存槽中，内存槽`0xc0`存的是`x`变量的长度，内存槽`0xe0` - `0x160`存的是对应元素的string数据在内存中的起始地址, `x[0]`中存的是`0x80`，`x[1]`中存的是`0x180`也就是`string("HELLO")`在内存中的起始位置，`x[2]`、`x[3]`都存的是`0x60`，内存槽`0x60`中是恒定的32字节0，在这里就表示长度为0的string，`x[4]`中存的是`0x1c0`也就是`string("WTF")`在内存中的起始位置，`0x200`后的数据都是`abi.encode`过的返回数据。
+可以看到, `demoMultiDimensionalArray("123456789", 5)`函数中，参数`info`的长度和数据存在内存槽`0x80` - `0xa0`中，参数`length`因为被编译器优化没有被存在接下来的内存槽中，内存槽`0xc0`存的是`x`变量的长度，内存槽`0xe0` - `0x160`存的是对应元素的string数据在内存中的起始地址, `x[0]`中存的是`0x80`，`x[1]`中存的是`0x180`也就是`string("HELLO")`在内存中的起始位置，`x[2]`、`x[3]`都存的是`0x60`，内存槽`0x60`中是恒定的32字节0，在这里就表示长度为0的string，`x[4]`中存的是`0x1c0`也就是`string("WTF")`在内存中的起始位置，`0x200`后的数据都是`abi.encode`过的返回数据。
 
 ![](./img/4-7.png)
 ![](./img/4-8.png)
