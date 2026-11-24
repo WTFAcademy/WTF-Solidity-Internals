@@ -29,7 +29,8 @@ contract MemoryLayout {
         return x;
     }
 
-    function testMultiDimensionalArray(string memory info, uint16 length) public pure returns (string[] memory){
+    function demoMultiDimensionalArray(string memory info, uint16 length) public pure returns (string[] memory){
+        require(length >= 3, "length must be at least 3");
         string[] memory x = new string[](length);
         x[0] = info;
         x[1] = "HELLO";

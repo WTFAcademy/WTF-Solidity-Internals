@@ -42,7 +42,7 @@ event Transfer(address indexed from, address indexed to, uint value);
 
 3. `topics[n]`: 第`n`个主题保存事件中第`n-1`个`indexed`字段。以`Transfer`事件为例，它的第`2`个主题就是`from`地址，第`3`个主题就是`to`地址。对于简单类型，它们会以ABI编码规则进行编码，直接保存在主题中；对于复杂类型，比如`string`/`bytes`/数组/结构体，按照特定的方式进行编码（与ABI编码有所不同，后面会讲），计算`keccak256`哈希，最后把哈希保存在主题中。
 
-4. `data`: 事件的数据部分就是把所有非`indexed`数据组成的元组进行ABI编码并保存，就像上一讲介绍的`returndata`那样。比如`WTF`会被编码为:
+4. `data`: 事件的数据部分就是把所有非`indexed`数据组成的元组进行ABI编码并保存，就像上一讲介绍的`returndata`那样。比如 Transfer 事件的 `value` 会被编码为:
 
   ![](./img/9-1.png)
 
@@ -99,7 +99,7 @@ function testEventString(
 0000000000000000000000000000000000000000000000000000000000000003
 ```
 
-它的哈希为`0x07aa5e15d4e202938899c76793e1e80b05efcb9cf1548dc9e34fa8813466f4f1`。
+它的哈希为`0x6e0c627900b24bd432fe7b1f713f1b0744091a646a9fe4a65a18dfed21f2949c`。
 
 ```solidity
 // 定义Array event，分别以topic和data记录相同的数组

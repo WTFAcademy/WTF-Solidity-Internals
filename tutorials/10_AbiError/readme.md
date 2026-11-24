@@ -31,12 +31,12 @@ tags:
 error InsufficientBalance(address from, uint256 required);
 
 // revert-error
-function testError(address addr, uint amount) public pure {
+function demoError(address addr, uint amount) public pure {
     revert InsufficientBalance(addr, amount);
 }
 ```
 
-对于函数输入 `000000000000000000000000d8b934580fce35a11b58c6d73adee468a2833fa8` 和 `1`，该错误信息的编码为：
+对于函数输入 `0xd8b934580fce35a11b58c6d73adee468a2833fa8` 和 `1`，该错误信息的编码为：
 
 ```
 0xf6deaa04
@@ -46,13 +46,11 @@ function testError(address addr, uint amount) public pure {
 
 ### require 和 assert
 
-自定义错误是在Solidity `0.8.4`版本加入的，之前只能用`require`和`assert`抛出一个字符串作为错误信息，那么它是如何编码的呢？
-
-Solidity规定了它们的错误签名为`Error(string)`，对应的选择器为`0x08c379a0`。
+Solidity 0.8.4 加入了自定义错误。`require` 或 `revert` 带错误字符串时，错误签名为 `Error(string)`，选择器为 `0x08c379a0`。在 Solidity 0.8 中，`assert(false)` 返回 `Panic(uint256)`，选择器为 `0x4e487b71`，参数为错误码 `0x01`。
 
 ```solidity
 // require
-function testRequire(address from) public pure {
+function demoRequire(address from) public pure {
     require(from == address(0), "Transfer Not Zero");
 }
 ```
@@ -68,4 +66,4 @@ function testRequire(address from) public pure {
 
 ## 总结
 
-这一讲，我们介绍了Solidity中错误的ABI编码规则，包括`0.8.4`新加入的自定义错误和以前`require`和`assert`抛出的字符串错误。
+这一讲，我们介绍了Solidity中错误的ABI编码规则，包括`0.8.4`新加入的自定义错误和`Error(string)` 和 `Panic(uint256)`。
